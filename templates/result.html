@@ -2,61 +2,144 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Résultats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Résultats Prédiction R2</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @media (max-width: 768px) {
+      .chart-container {
+        height: 300px !important;
+      }
+      .data-card {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-50 py-8">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-    <h2 class="text-2xl font-bold mb-4 text-center text-blue-700">🔮 Résultat des Prédictions</h2>
-    <div class="grid grid-cols-2 gap-4 text-lg">
-      <div>
-        <h3 class="font-semibold mb-2">Historique R2 :</h3>
-        <ul class="list-disc ml-6">
-          {% for label, val in historique %}
-            <li>{{ label }} : {{ "{:,.0f}".format(val) }} FC</li>
-          {% endfor %}
-        </ul>
+<body class="bg-gray-50 min-h-screen flex items-start justify-center p-4 sm:p-6">
+  <div class="w-full max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+    <div class="p-6 sm:p-8">
+      <div class="text-center mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold text-indigo-800">🔮 Résultats des Prédictions R2</h1>
+        <p class="text-sm text-gray-600 mt-2">Analyse des risques opérationnels</p>
       </div>
-      <div>
-        <h3 class="font-semibold mb-2">Commentaires :</h3>
-        <p class="text-gray-700 italic">{{ commentaire }}</p>
+
+      <div class="data-card grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="font-semibold text-lg text-gray-800 mb-3 border-b pb-2">Historique R2</h3>
+          <ul class="space-y-2">
+            {% for label, val in historique %}
+            <li class="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+              <span class="font-medium">{{ label }}</span>
+              <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm">
+                {{ "{:,.0f}".format(val) }} FC
+              </span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="font-semibold text-lg text-gray-800 mb-3 border-b pb-2">Analyse</h3>
+          <div class="prose prose-sm text-gray-700">
+            <p>{{ commentaire }}</p>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="my-6">
-      <canvas id="r2Chart" height="100"></canvas>
-    </div>
-    <div class="flex justify-between mt-6">
-      <a href="/" class="bg-gray-300 text-black px-4 py-2 rounded">↩️ Accueil</a>
-      <a href="/download" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">📥 Télécharger Excel</a>
+
+      <div class="chart-container mb-8" style="height: 400px">
+        <canvas id="r2Chart"></canvas>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-between gap-3">
+        <a href="/" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-lg text-center transition-colors duration-200">
+          ↩️ Retour à l'accueil
+        </a>
+        <a href="/download" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg text-center transition-colors duration-200">
+          📥 Télécharger le rapport
+        </a>
+      </div>
     </div>
   </div>
+
   <script>
-    const ctx = document.getElementById('r2Chart').getContext('2d');
-    const labels = {{ all_labels | safe }};
-    const data = {{ all_values | safe }};
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Risque Opérationnel R2',
-          data: data,
-          borderColor: 'rgba(255, 99, 132, 1)',
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          tension: 0.3,
-          fill: false,
-          pointRadius: 5
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: false,
-            title: { display: true, text: 'Montant R2 (FC)' }
+    // Configuration responsive du graphique
+    function initChart() {
+      const ctx = document.getElementById('r2Chart').getContext('2d');
+      const labels = {{ all_labels | safe }};
+      const data = {{ all_values | safe }};
+      
+      return new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Risque Opérationnel R2 (FC)',
+            data: data,
+            borderColor: 'rgba(79, 70, 229, 1)',
+            backgroundColor: 'rgba(79, 70, 229, 0.05)',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+            pointRadius: 5,
+            pointHoverRadius: 7
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return context.dataset.label + ': ' + context.raw.toLocaleString() + ' FC';
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              title: { 
+                display: true, 
+                text: 'Montant (FC)',
+                font: { weight: 'bold' }
+              },
+              ticks: {
+                callback: function(value) {
+                  return value.toLocaleString();
+                }
+              }
+            },
+            x: {
+              title: { 
+                display: true, 
+                text: 'Périodes',
+                font: { weight: 'bold' }
+              }
+            }
           }
         }
+      });
+    }
+
+    // Initialisation avec redimensionnement responsive
+    document.addEventListener('DOMContentLoaded', function() {
+      const chart = initChart();
+      
+      // Gestion du redimensionnement
+      window.addEventListener('resize', function() {
+        chart.resize();
+      });
+
+      // Optimisation mobile
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        document.querySelector('meta[name="viewport"]').content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0';
       }
     });
   </script>
