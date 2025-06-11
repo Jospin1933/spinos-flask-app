@@ -2,29 +2,81 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Saisie Manuelle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Saisie Manuelle - Prédiction R2</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media (max-width: 640px) {
+      .input-field {
+        font-size: 16px !important; /* Empêche le zoom sur iOS */
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-50 py-8">
-  <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
-    <h2 class="text-xl font-bold mb-4 text-center">Saisie manuelle (régression linéaire)</h2>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-indigo-800">Prédiction Risque R2</h1>
+      <p class="text-sm text-gray-600 mt-1">Saisie manuelle des données trimestrielles</p>
+    </div>
+
     <form method="POST" action="/predict" class="space-y-4" onsubmit="showLoading()">
       {% for i in range(4) %}
-        <div>
-          <label class="block font-semibold">Nom trimestre {{ i+1 }} :</label>
-          <input type="text" name="label{{ i }}" class="w-full border rounded px-3 py-2" required>
-          <label class="block font-semibold mt-2">Valeur R2 :</label>
-          <input type="number" name="value{{ i }}" class="w-full border rounded px-3 py-2" required>
-        </div>
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-700">Trimestre {{ i+1 }} :</label>
+        <input type="text" 
+               name="label{{ i }}" 
+               class="input-field w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+               placeholder="Ex: Sept 2023" 
+               required>
+               
+        <label class="block text-sm font-medium text-gray-700 mt-2">Valeur R2 :</label>
+        <input type="number" 
+               name="value{{ i }}" 
+               class="input-field w-full border border-gray-300 rounded-md px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+               placeholder="Ex: 844938801140" 
+               required
+               inputmode="numeric">
+      </div>
       {% endfor %}
-      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full">🔮 Prédire</button>
+
+      <div class="flex flex-col space-y-3 pt-2">
+        <button type="submit" 
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+          🔮 Lancer la prédiction
+        </button>
+        
+        <a href="/" 
+           class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-6 py-3 rounded-md text-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+          ← Retour à l'accueil
+        </a>
+      </div>
     </form>
-    <div id="loading" class="hidden mt-4 text-center text-green-700 font-semibold">⏳ Calcul en cours...</div>
+
+    <div id="loading" class="hidden mt-6 text-center">
+      <div class="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-800 rounded-md">
+        <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span class="font-medium">Calcul en cours...</span>
+      </div>
+    </div>
   </div>
+
   <script>
     function showLoading() {
       document.getElementById("loading").classList.remove("hidden");
+      // Désactive le bouton pour éviter les doubles soumissions
+      document.querySelector('button[type="submit"]').disabled = true;
     }
+    
+    // Force le zoom initial sur mobile
+    document.addEventListener('DOMContentLoaded', function() {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        document.querySelector('meta[name="viewport"]').content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0';
+      }
+    });
   </script>
 </body>
 </html>
