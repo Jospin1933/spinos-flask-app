@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Résultats</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4 text-center text-blue-700">🔮 Résultat des Prédictions</h2>
+    <div class="grid grid-cols-2 gap-4 text-lg">
+      <div>
+        <h3 class="font-semibold mb-2">Historique R2 :</h3>
+        <ul class="list-disc ml-6">
+          {% for label, val in historique %}
+            <li>{{ label }} : {{ "{:,.0f}".format(val) }} FC</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold mb-2">Commentaires :</h3>
+        <p class="text-gray-700 italic">{{ commentaire }}</p>
+      </div>
+    </div>
+    <div class="my-6">
+      <canvas id="r2Chart" height="100"></canvas>
+    </div>
+    <div class="flex justify-between mt-6">
+      <a href="/" class="bg-gray-300 text-black px-4 py-2 rounded">↩️ Accueil</a>
+      <a href="/download" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">📥 Télécharger Excel</a>
+    </div>
+  </div>
+  <script>
+    const ctx = document.getElementById('r2Chart').getContext('2d');
+    const labels = {{ all_labels | safe }};
+    const data = {{ all_values | safe }};
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Risque Opérationnel R2',
+          data: data,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          tension: 0.3,
+          fill: false,
+          pointRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: false,
+            title: { display: true, text: 'Montant R2 (FC)' }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

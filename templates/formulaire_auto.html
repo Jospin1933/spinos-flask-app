@@ -1,0 +1,34 @@
+<!DOCTYPE html> <html lang="fr"> 
+    <head> <meta charset="UTF-8">
+        <title>Données historiques - Prédiction R2</title> 
+        <script src="https://cdn.tailwindcss.com">
+
+        </script> </head> <body class="bg-gray-100 min-h-screen flex items-center justify-center py-12 px-4"> 
+            <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-xl">
+                 <h1 class="text-2xl font-bold text-blue-700 text-center mb-6">📊 Prédire R2 à partir des données 2023–2024</h1>
+<form method="POST" action="/predict" class="space-y-5" onsubmit="showLoading()">
+  {% for i in range(4) %}
+    <div>
+      <label class="block font-semibold text-gray-700 mb-1">{{ labels[i] }} :</label>
+      <input type="hidden" name="label{{ i }}" value="{{ labels[i] }}">
+      <input type="number" name="value{{ i }}" value="{{ valeurs[i] }}" step="any"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+    </div>
+  {% endfor %}
+
+  <button type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200">
+    🔮 Lancer la prédiction
+  </button>
+</form>
+
+<div id="loading" class="hidden text-center text-blue-600 font-medium mt-4">
+  ⏳ Calcul en cours...
+</div>
+
+<div class="text-center mt-6">
+  <a href="/" class="text-blue-500 hover:underline">← Retour à l’accueil</a>
+</div>
+</div> 
+<script> function showLoading() { document.getElementById("loading").classList.remove("hidden"); } </script> 
+</body> </html>

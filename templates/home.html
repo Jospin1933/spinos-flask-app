@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Manucha Kazad – Rawbank</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body {
+            background-image: url("/static/bg.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+        .overlay {
+            background: linear-gradient(to top right, rgba(14, 55, 236, 0.6), rgba(40, 39, 105, 0.2));
+            flex: 1;
+            width: 100%;
+        }
+        .typewriter h2 {
+            overflow: hidden;
+            border-right: 3px solid #fff;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: 2px;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: white }
+        }
+        @keyframes float {
+            0% { transform: translatey(0px); }
+            50% { transform: translatey(-10px); }
+            100% { transform: translatey(0px); }
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        footer {
+            background-color: rgba(3, 16, 61, 0.7);
+            color: white;
+            text-align: center;
+            padding: 0.8rem;
+            font-size: 0.8rem;
+            width: 100%;
+        }
+        
+        /* Media Queries pour différents appareils */
+        @media (max-width: 640px) {
+            .content-box {
+                padding: 1.5rem !important;
+                margin: 1rem !important;
+                width: 90% !important;
+            }
+            .typewriter h2 {
+                font-size: 1rem;
+                white-space: normal;
+                border-right: none;
+                animation: none;
+            }
+            .btn-container {
+                flex-direction: column;
+                gap: 0.8rem !important;
+            }
+            .btn {
+                width: 100% !important;
+                padding: 0.8rem !important;
+            }
+        }
+        
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .content-box {
+                padding: 2rem !important;
+                width: 80% !important;
+            }
+        }
+    </style>
+</head>
+<body class="overlay">
+    <div class="flex-grow flex items-center justify-center p-4">
+        <div class="content-box bg-white bg-opacity-80 backdrop-blur-md rounded-xl shadow-2xl p-8 sm:p-10 w-full max-w-3xl mx-auto text-center animate__animated animate__fadeInUp">
+            <div class="floating mb-4">
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-indigo-800">Manucha Kazad</h1>
+                <p class="text-xs sm:text-sm font-semibold text-blue-700">Rawbank is my bank</p>
+            </div>
+
+            <div class="typewriter text-base sm:text-lg text-gray-700 my-4 sm:my-6">
+                <h2 class="text-sm sm:text-base md:text-lg">Votre outil de prédiction intelligente du risque opérationnel R2 📊</h2>
+            </div>
+
+            <p class="text-gray-700 mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
+                Analysez et prédisez les risques pour 2025 et 2026 à partir des données historiques ou saisies manuellement. Visualisez les résultats avec des graphiques modernes.
+            </p>
+
+            <div class="btn-container flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                <a href="/formulaire_auto"
+                    class="btn bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg transition duration-300 transform hover:scale-105 text-sm sm:text-base">
+                    🔍 Utiliser données historiques
+                </a>
+                <a href="/formulaire_custom"
+                    class="btn bg-green-600 hover:bg-green-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg transition duration-300 transform hover:scale-105 text-sm sm:text-base">
+                    ✍️ Saisir mes propres données
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Manucha Kazad - Tous droits réservés
+    </footer>
+</body>
+</html>
